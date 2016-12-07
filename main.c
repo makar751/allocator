@@ -13,6 +13,8 @@ int main(void) {
   printf("first free comp \n");
     a = mymalloc(sizeof(int));
     b = mymalloc(sizeof(long));
+    a = myrealloc(a, sizeof(long));
+    b = mycalloc(4, 4);
   printf("second malloc comp \n");
 
   //cleanup();
