@@ -39,8 +39,8 @@ void *getSpace(size_t size, memoryPage *page)
 	if (page->first == NULL)
 	{
 		page->first = page->page; 
-		page->freeSpace = page->freeSpace - size - sizeof(memoryUsedList);
-		page->first->ptr = page->page + sizeof(memoryUsedList);
+		page->freeSpace = page->freeSpace - size;
+		page->first->ptr = page->page;
 		page->first->size = size;
 		page->first->next = NULL;
 		return page->first->ptr;
@@ -97,7 +97,7 @@ void *getPage(size_t size)
 		q->freeSpace = page_size;
 		q->first = NULL;
 		q->next = getSpace(sizeof(memoryPage),q); // заготовка под следующюю страницу
-		q->next->freeSpace = -1;
+		q->next->freeSpace = 0;
 		return q;
 	}
 	else
