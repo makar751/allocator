@@ -5,12 +5,6 @@
 int main(void) {
   int *a;
   long *b;
-  int tmp[100000];
-  for (int i=0;i<100000;i++)
-  {
-    tmp[i]=mymalloc(sizeof(int));
-    printf("%d /n",i);
-  }
     a = mymalloc(sizeof(int));
     b = mymalloc(sizeof(long));
   printf("first malloc comp \n");
