@@ -70,13 +70,25 @@ void *getPage(size_t size)
 		firstPage->first = NULL;
 		firstPage->freeSpace = page_size;
 		firstPage->next = getSpace(sizeof(memoryPage), firstPage); // заготовка под следующюю страницу
-		firstPage->next->freeSpace = -1;
+		firstPage->next->freeSpace = 0;
 		return firstPage;
 	}
 	memoryPage *q = firstPage;
 	while ((q != NULL) && (q->freeSpace < (size + sizeof(memoryUsedList))))
 		q = q->next;
 	if (q == NULL)
+	{
+		q = firstPage;
+		while (q->next != NULL)
+			q = q->next;
+		q->page = mmap(NULL, page_size, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0); 
+		q->freeSpace = page_size;
+		q->first = NULL;
+		q->next = getSpace(sizeof(memoryPage),q); // заготовка под следующюю страницу
+		q->next->freeSpace = 0;
+		return q;
+	}
+	if (q->freeSpace == 0)
 	{
 		q = firstPage;
 		while (q->next != NULL)
