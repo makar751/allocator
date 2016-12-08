@@ -40,7 +40,7 @@ void *getSpace(size_t size, memoryPage *page)
 	{
 		page->first = page->page; 
 		page->freeSpace = page->freeSpace - size;
-		page->first->ptr = page->page;
+		page->first->ptr = page->page + sizeof(memoryUsedList);
 		page->first->size = size;
 		page->first->next = NULL;
 		return page->first->ptr;
@@ -70,6 +70,7 @@ void *getPage(size_t size)
 		firstPage->first = NULL;
 		firstPage->freeSpace = page_size;
 		firstPage->next = getSpace(sizeof(memoryPage), firstPage); // заготовка под следующюю страницу
+		firstPage->next->page = NULL;
 		firstPage->next->freeSpace = 0;
 		return firstPage;
 	}
@@ -88,7 +89,7 @@ void *getPage(size_t size)
 		q->next->freeSpace = 0;
 		return q;
 	}
-	if (q->freeSpace == 0)
+	if (q->page == NULL) 
 	{
 		q = firstPage;
 		while (q->next != NULL)
